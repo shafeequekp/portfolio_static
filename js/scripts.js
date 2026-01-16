@@ -134,14 +134,27 @@ async function fetchGitHubProjects() {
             return;
         }
 
-        const projects = repos.map(repo => ({
-            title: repo.name,
-            description: repo.description || "No description provided.",
-            image: "assets/project-placeholder.png",
-            github: repo.html_url,
-            demo: repo.homepage || "#",
-            technologies: repo.language || "Various"
-        }));
+        const projects = repos.map(repo => {
+            // Choose placeholder image based on technology
+            let placeholderImage = "assets/project-placeholder.png";
+            const lang = (repo.language || "").toLowerCase();
+
+            if (lang.includes('python') || lang.includes('django')) {
+                placeholderImage = "assets/project1.png";
+            } else if (lang.includes('javascript') || lang.includes('typescript') ||
+                lang.includes('html') || lang.includes('css')) {
+                placeholderImage = "assets/project2.png";
+            }
+
+            return {
+                title: repo.name,
+                description: repo.description || "No description provided.",
+                image: placeholderImage,
+                github: repo.html_url,
+                demo: repo.homepage || "#",
+                technologies: repo.language || "Various"
+            };
+        });
 
         renderProjects(projects);
     } catch (error) {
