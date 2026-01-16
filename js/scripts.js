@@ -15,9 +15,40 @@ function renderProfile() {
     document.getElementById('hero-name').textContent = p.name;
     document.getElementById('hero-title').textContent = p.title;
     document.getElementById('hero-bio').textContent = p.bio;
-    document.getElementById('resume-download').href = p.resumeUrl;
+
+    // Set resume download links with JavaScript download handler
+    const resumeDownload = document.getElementById('resume-download');
     const navResume = document.getElementById('nav-resume-download');
-    if (navResume) navResume.href = p.resumeUrl;
+
+    // Create download handler function
+    const downloadResume = (e) => {
+        e.preventDefault();
+        fetch(p.resumeUrl)
+            .then(response => response.blob())
+            .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = 'resume.pdf';
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+            })
+            .catch(error => {
+                console.error('Error downloading resume:', error);
+                // Fallback: open in new tab
+                window.open(p.resumeUrl, '_blank');
+            });
+    };
+
+    // Attach click handlers
+    resumeDownload.addEventListener('click', downloadResume);
+    if (navResume) {
+        navResume.addEventListener('click', downloadResume);
+    }
+
     document.getElementById('footer-name').textContent = p.name;
 
     const imgContainer = document.getElementById('hero-image-container');
@@ -79,11 +110,26 @@ async function fetchGitHubProjects() {
     try {
         container.innerHTML = '<div class="col-12 text-center py-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>';
 
+        console.log('Fetching GitHub projects from:', apiUrl);
         const response = await fetch(apiUrl);
-        if (!response.ok) throw new Error('Failed to fetch from GitHub');
+
+        // Check for rate limiting
+        if (response.status === 403) {
+            const rateLimitRemaining = response.headers.get('X-RateLimit-Remaining');
+            console.warn('GitHub API rate limit exceeded. Remaining:', rateLimitRemaining);
+            throw new Error('GitHub API rate limit exceeded. Using fallback projects.');
+        }
+
+        if (!response.ok) {
+            console.error('GitHub API error:', response.status, response.statusText);
+            throw new Error(`GitHub API returned ${response.status}: ${response.statusText}`);
+        }
+
         const repos = await response.json();
+        console.log('Successfully fetched', repos.length, 'repositories from GitHub');
 
         if (!repos || repos.length === 0) {
+            console.log('No repositories found, using fallback projects');
             renderProjects(portfolioData.projects);
             return;
         }
@@ -100,6 +146,7 @@ async function fetchGitHubProjects() {
         renderProjects(projects);
     } catch (error) {
         console.error('Error fetching GitHub projects:', error);
+        console.log('Falling back to static projects from data.js');
         renderProjects(portfolioData.projects);
     }
 }
