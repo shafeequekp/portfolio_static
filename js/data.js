@@ -3,7 +3,7 @@ const portfolioData = {
         name: "Muhammed Shafeek",
         title: "Python Developer",
         bio: "Python Developer at Classyserver Technologies, Kochi. Specializing in building scalable applications, microservices, and ETL pipelines.",
-        email: "shafeek@example.com",
+        email: "shafeequevesala@gmail.com",
         linkedin: "https://www.linkedin.com/in/shafeek-kp/",
         github: "https://github.com/shafeequekp",
         profileImage: "assets/profile.jpg",
@@ -37,10 +37,16 @@ const portfolioData = {
     ],
     experience: [
         {
-            role: "Python Developer",
-            company: "Classyserver Technologies",
-            period: "2022 - Present",
-            description: "Working on scalable applications, backend development with Django/FastAPI, and cloud infrastructure on AWS. Address: Aminas, Kottanicher, Kanhirode PO, 670592 PIN."
+            role: "Senior Software Engineer",
+            company: "Classyserver Technologies Pvt. Ltd",
+            period: "May 2022 - Present",
+            description: "Working on multiple projects involving Python, Django, and full-stack development, with a focus on creating scalable solutions. Implemented backend services and integrated with cloud provider (AWS). Leading teams and mentoring junior developers, fostering skill development and improving team collaboration."
+        },
+        {
+            role: "Software Engineer",
+            company: "Duklr Analytics Pvt. Ltd",
+            period: "March 2021 - May 2022",
+            description: "Led the development of web-based applications and services using Python, Django and AWS. Designed scalable software components and ensured optimal performance. Collaborated with cross-functional teams (product managers, UX/UI, and QA) to deliver key features. Managed the product lifecycle from definition and design to implementation and deployment."
         }
     ],
     projects: [
