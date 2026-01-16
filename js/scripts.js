@@ -16,6 +16,8 @@ function renderProfile() {
     document.getElementById('hero-title').textContent = p.title;
     document.getElementById('hero-bio').textContent = p.bio;
     document.getElementById('resume-download').href = p.resumeUrl;
+    const navResume = document.getElementById('nav-resume-download');
+    if (navResume) navResume.href = p.resumeUrl;
     document.getElementById('footer-name').textContent = p.name;
 
     const imgContainer = document.getElementById('hero-image-container');
